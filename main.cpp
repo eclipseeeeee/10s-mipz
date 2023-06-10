@@ -1,21 +1,24 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-const int MAXN = 25;
-struct Country {
+class Country{
+	public:
 	char name[30];
-	int xl, xr, yl, yr;
+	int xl;
+	int xr;
+	int yl;
+	int yr;
 	int cnt;
 	int day;
-} C[MAXN];
+} C[25];
 
-const int MAXX = 25;
-const int MAXY = 25;
-struct City {
-	int coin[30], next[30];
+class City {
+	public:
+	int coin[30];
+	int next[30];
 	int cid;
 	int cnt;
-} g[MAXX][MAXY];
+} g[25][25];
 
 int simulate(int ts, int n) {
 	int ret = 0;
