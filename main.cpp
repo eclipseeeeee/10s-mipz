@@ -1,8 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-class Country{
-	public:
+struct Country{
 	char name[30];
 	int xl;
 	int xr;
@@ -12,8 +11,7 @@ class Country{
 	int day;
 } C[25];
 
-class City {
-	public:
+struct City {
 	int coin[30];
 	int next[30];
 	int cid;
