@@ -1,46 +1,73 @@
 #include <bits/stdc++.h>
+
 using namespace std;
 
 struct Country{
-	char name[30];
+	string name;
 	int xl;
 	int xr;
 	int yl;
 	int yr;
 	int cnt;
 	int day;
-} C[25];
+};
 
 struct City {
-	int coin[30];
-	int next[30];
+	vector<int> coin;
+	vector<int> next;
 	int cid;
 	int cnt;
-} g[25][25];
+} ;
 
-int simulate(int ts, int n) {
+vector<Country> C;
+vector<City,City> g;
+
+const hundred = 1000;
+
+
+void import(){
+for (int j = 0; j < n; j++) {
+	if (g[p][q].next[j] == 0)
+		continue;
+	if (g[p][q].coin[j] == 0 && g[p][q].next[j] > 0) {
+		g[p][q].cnt--;
+		if (g[p][q].cnt == 0 && C[i].day < 0) {
+			C[i].cnt--;
+			if (C[i].cnt == 0)
+				C[i].day = ts, ret++;
+		}
+	}
+	g[p][q].coin[j] += g[p][q].next[j];
+	g[p][q].next[j] = 0;
+}
+}
+
+void export(){
+for (int j = 0; j < n; j++) {
+	int give = g[p][q].coin[j] / hundred;
+	if (give == 0)
+		continue;
+	int lost = 0;
+	for (int k = 0; k < 4; k++) {
+		int tx = p + dx[k];
+		int ty = q + dy[k];
+		if (g[tx][ty].cid < 0)
+			continue;
+		g[tx][ty].next[j] += give;
+		lost += give;
+	}
+	g[p][q].coin[j] -= lost;
+}
+}
+
+int simulate(int number_of_unvisited_countries, int country_number) {
 	int ret = 0;
 	const int dx[] = {0, 0, 1, -1};
 	const int dy[] = {1, -1, 0, 0};
 	for (int i = 0; i < n; i++) {
 	for (int p = C[i].xl; p <= C[i].xr; p++) {
 		for (int q = C[i].yl; q <= C[i].yr; q++) {
-			// export
-			for (int j = 0; j < n; j++) {
-				int give = g[p][q].coin[j] / 1000;
-				if (give == 0)
-					continue;
-				int lost = 0;
-				for (int k = 0; k < 4; k++) {
-					int tx = p + dx[k];
-					int ty = q + dy[k];
-					if (g[tx][ty].cid < 0)
-						continue;
-					g[tx][ty].next[j] += give;
-					lost += give;
-				}
-				g[p][q].coin[j] -= lost;
-			}
+			export();
 		}
 	}
 	}
@@ -48,26 +75,15 @@ int simulate(int ts, int n) {
 	for (int i = 0; i < n; i++) {
 	for (int p = C[i].xl; p <= C[i].xr; p++) {
 		for (int q = C[i].yl; q <= C[i].yr; q++) {
-			// import
-			for (int j = 0; j < n; j++) {
-				if (g[p][q].next[j] == 0)
-					continue;
-				if (g[p][q].coin[j] == 0 && g[p][q].next[j] > 0) {
-					g[p][q].cnt--;
-					if (g[p][q].cnt == 0 && C[i].day < 0) {
-						C[i].cnt--;
-						if (C[i].cnt == 0)
-							C[i].day = ts, ret++;
-					}
-				}
-				g[p][q].coin[j] += g[p][q].next[j];
-				g[p][q].next[j] = 0;
-			}
+			import();
 		} 
 	}
 	}
 	return ret;
 }
+
+
+
 
 int main() {
 	int n;
